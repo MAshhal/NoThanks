@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.NoThanks" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.AppStart" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.NoThanks</item>
+    </style>
+
+</resources>
