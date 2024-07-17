@@ -30,6 +30,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            val signAsDebug: String? by project
+            signingConfig =
+                signingConfigs.getByName(if (signAsDebug.toBoolean()) "debug" else "release")
         }
     }
     compileOptions {
@@ -107,6 +110,9 @@ dependencies {
     // Oss plugin
 
     implementation(libs.coil.kt.compose)
+    implementation("androidx.palette:palette-ktx:1.0.0")
 
-    implementation ("com.google.android.gms:play-services-ads:23.2.0")
+    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+
+    implementation("com.google.android.gms:play-services-ads:23.2.0")
 }
