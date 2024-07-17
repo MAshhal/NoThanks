@@ -53,7 +53,7 @@ fun Brand.toEntity() = BrandEntity(
     logoUrl = logoUrl,
     alternatives = alternatives?.defaultBrandJoin(),
     alternativesDescription = alternativesDescription,
-    stakeholders = stakeholders?.defaultBrandJoin { Gson().toJson(it) }
+    stakeholders = Gson().toJson(stakeholders)
 )
 
 private fun <T> List<T>.defaultBrandJoin(transform: ((T) -> CharSequence)? = null) =

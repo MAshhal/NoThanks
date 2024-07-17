@@ -56,7 +56,7 @@ fun BrandEntity.toBrand() = Brand(
     logoUrl = logoUrl,
     alternatives = alternatives?.defaultBrandSplit(),
     alternativesDescription = alternativesDescription,
-    stakeholders = Gson().fromJson(stakeholders, stakeholderTypeToken)
+    stakeholders = stakeholders?.let { Gson().fromJson(it, stakeholderTypeToken) }
 )
 
 private fun String.defaultBrandSplit() = split(defaultBrandSeparator)
