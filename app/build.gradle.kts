@@ -115,4 +115,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
 
     implementation("com.google.android.gms:play-services-ads:23.2.0")
+
+    implementation("androidx.camera:camera-viewfinder-compose:1.0.0-alpha02")
+
+    implementation("io.github.mr0xf00:easycrop:0.1.1")
 }
