@@ -3,6 +3,10 @@ name: Create a release APK
 # Only trigger this workflow manually
 on:
   workflow_dispatch:
+    inputs:
+      tag_name:
+        required: true
+        type: string
   
 # Permissions granted to the token used by the workflow
 # contents: write allows the workflow to create a release in the repository
@@ -56,6 +60,8 @@ jobs:
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: github.event.inputs.tag_name
+          name: "Latest Release"
           prerelease: false
           generate_release_notes: false
           files: artifacts/*
