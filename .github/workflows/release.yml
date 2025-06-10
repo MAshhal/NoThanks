@@ -3,10 +3,6 @@ name: Create a release APK
 # Only trigger this workflow manually
 on:
   workflow_dispatch:
-    inputs:
-      tag_name:
-        required: true
-        type: string
   
 # Permissions granted to the token used by the workflow
 # contents: write allows the workflow to create a release in the repository
@@ -57,11 +53,8 @@ jobs:
           find . -name "*-release.apk" -type f -exec cp {} "artifacts" \;
           find . -name "mapping.txt" -type f -exec cp {} "artifacts" \;
 
-      - name: Create Github Release
-        uses: softprops/action-gh-release@v2
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: github.event.inputs.tag_name
-          name: "Latest Release"
-          prerelease: false
-          generate_release_notes: false
-          files: artifacts/*
+          name: app-artifacts
+          path: artifacts/*
