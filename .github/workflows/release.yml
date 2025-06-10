@@ -1,0 +1,61 @@
+name: Create a release APK
+
+# Only trigger this workflow manually
+on:
+  workflow_dispatch:
+  
+# Permissions granted to the token used by the workflow
+# contents: write allows the workflow to create a release in the repository
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Runs on the latest stable version provided by GitHub Actions
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      # We use this action instead of manually setting up gradle
+      # because this action can cache the gradle dependencies & configuration
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          cache-read-only: ${{ !(github.ref == 'refs/heads/main') }}
+
+      # Avoids permission denied error
+      - name: Grant execute permissions for gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Build Release App
+        run: ./gradlew assembleRelease
+
+      # Collects the release APK files into a single directory
+      - name: Collect artifacts
+        # COLLECT_PWD = current working directory
+        # Create a directory named "artifacts" in the current working directory
+        # -p means create the directory if it doesn't exist and silently ignore if it already exists
+        # Find all the files with name "*-release.apk" in the current directory and it's subdirectories ('.' wildcard)
+        # -type f means only find files, not directories
+        # for each file found, -exec command is ran
+        # cp {} "artifacts" copies the found file to the "artifacts" directory
+        run: |
+          COLLECT_PWD=${PWD}
+          mkdir -p "artifacts"
+          find . -name "*-release.apk" -type f -exec cp {} "artifacts" \;
+          find . -name "mapping.txt" -type f -exec cp {} "artifacts" \;
+
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: false
+          generate_release_notes: false
+          files: artifacts/*
